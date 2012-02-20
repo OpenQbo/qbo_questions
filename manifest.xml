@@ -1,0 +1,16 @@
+<package>
+  <description brief="qbo_questions">
+
+     qbo_questions
+
+  </description>
+  <author>Sergio Merino/smerino@openqbo.org</author>
+  <license>GPL v2</license>
+  <depend package="rospy"/>
+  <depend package="qbo_listen"/>
+  <depend package="qbo_talk"/>
+  <depend package="qbo_system_info"/>
+
+</package>
+
+
