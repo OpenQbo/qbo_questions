@@ -1,5 +1,5 @@
-Package: qbo-questions
-Source: qbo-questions
+Package: qboros-electric-questions
+Source: qboros-electric-questions
 Version: 1.0-openqbo0
 Priority: standard
 Architecture: amd64
