@@ -78,7 +78,7 @@ def main():
     client_speak = rospy.ServiceProxy("/Qbo/festivalSay", Text2Speach)
     subscribe=rospy.Subscriber("/listen/en_default", Listened, listen_callback)
 
-    rospy.Subscriber("/qbo_face_tracking/face_pos_and_dist", FacePosAndSize, face_callback)
+    rospy.Subscriber("/qbo_face_tracking/face_pos_and_dist", FacePosAndDist, face_callback)
 
 
     
