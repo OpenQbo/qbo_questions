@@ -1,9 +1,9 @@
 Package: qboros-electric-qbo-questions
 Source: qboros-electric-qbo-questions
 Version: 1.0-openqbo0
+Section: OpenQbo
 Priority: standard
 Architecture: amd64
-Depends:
 Maintainer: Sergio Merino <s.merino@openqbo.org>
 Homepage: http://openqbo.org/wiki/doku.php?id=qbo_apps:ros_pack:qbo_questions
 Description: This package is a ros node to answer questions asked by users
