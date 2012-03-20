@@ -15,7 +15,7 @@ from qbo_listen.msg import Listened
 from qbo_talk.srv import Text2Speach
 from qbo_system_info.srv import AskInfo
 
-from qbo_face_msgs.msg import FacePosAndSize
+from qbo_face_msgs.msg import FacePosAndDist
 
 global client_speak
 global face_detected
