@@ -2,6 +2,7 @@ Package: qboros-electric-qbo-questions
 Source: qboros-electric-qbo-questions
 Version: 1.0-openqbo0
 Section: OpenQbo
+Depends: ros-electric-ros, python, qboros-electric-qbo-listen, qboros-electric-qbo-talk, qboros-electric-qbo-system-info, qboros-electric-qbo-face-vision
 Priority: standard
 Architecture: amd64
 Maintainer: Sergio Merino <s.merino@openqbo.org>
