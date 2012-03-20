@@ -10,6 +10,7 @@
   <depend package="qbo_listen"/>
   <depend package="qbo_talk"/>
   <depend package="qbo_system_info"/>
+  <depend package="qbo_face_msgs"/>
 
 </package>
 
