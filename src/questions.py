@@ -75,7 +75,7 @@ def main():
 
     rospy.init_node('questions')
     rospy.loginfo("Starting questions node")
-    client_speak = rospy.ServiceProxy("/Qbo/festivalSay", Text2Speach)
+    client_speak = rospy.ServiceProxy("/qbo_talk/festival_say", Text2Speach)
     subscribe=rospy.Subscriber("/listen/en_default", Listened, listen_callback)
 
     rospy.Subscriber("/qbo_face_tracking/face_pos_and_dist", FacePosAndDist, face_callback)
