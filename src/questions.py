@@ -38,11 +38,8 @@ def listen_callback(data):
        return
 
 
-    
-
     if sentence in dialogue:
         output = dialogue[sentence]
-        print random.choice(output)
         speak_this(random.choice(output))
 
 
@@ -73,32 +70,34 @@ def main():
     # We load the dialgues from the config folder
     global dialogue
     dialogue = {}
-    f = open('../config/dialogues')    
+
+    path = roslib.packages.get_pkg_dir("qbo_questions")
+    f = open(path+'/config/dialogues')    
     for line in f.readlines():
         try:
             line = line.replace("\n","")
             parts = line.split(">>>")
 
-            dialogue_input = parts[0]
-            dialogue_output = parts[1]
+            dialogue_input = parts[0].upper()
+            dialogue_output = parts[1].upper()
+
         
             # we check wheter the input line alreayd exists, if so, we add to its own list
-            if dialogue_input in dialogue:
-                list_of_answers = dialogue[dialogue_input]
-                list_of_answers.append(dialogue_output)
-                dialogue[dialogue_input] = list_of_answers
+            if dialogue_input in dialogue:                
+                dialogue[dialogue_input].append(dialogue_output)
             else:
                 #dialogue_input does not exist
                 dialogue[dialogue_input] = [dialogue_output]
-        except:
+        except Exception:
             pass        
 
     f.close()    
 
+
     rospy.init_node('questions')
     rospy.loginfo("Starting questions node")
     client_speak = rospy.ServiceProxy("/qbo_talk/festival_say", Text2Speach)
-    subscribe=rospy.Subscriber("/listen/en_default", Listened, listen_callback)
+    subscribe=rospy.Subscriber("/listen/en_questions", Listened, listen_callback)
 
     rospy.Subscriber("/qbo_face_tracking/face_pos_and_dist", FacePosAndDist, face_callback)
 
