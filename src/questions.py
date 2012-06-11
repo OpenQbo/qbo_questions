@@ -17,6 +17,9 @@ from qbo_system_info.srv import AskInfo
 
 from qbo_face_msgs.msg import FacePosAndDist
 
+import random
+
+
 global client_speak
 global face_detected
 
@@ -26,29 +29,22 @@ def speak_this(text):
 
 def listen_callback(data):
     global face_detected  
-  
+    global dialogue
     sentence = data.msg
     rospy.loginfo("Listened: |"+sentence+"|")
    
     if not face_detected:
        rospy.loginfo("Ignoring last sentece because face was not detected")
        return
- 
-    if sentence=="HOW ARE YOU" or sentence == "I'M FINE AND YOU":
-        speak_this("I'M FINE THANK YOU");
-    elif sentence=="WHAT IS YOUR NAME" or sentence == "HELLO WHAT IS YOU NAME":
-        speak_this("MY NAME IS QBO");
-    elif sentence=="WHAT ARE YOU":
-        speak_this("I AM QBO, A LOW COST ROBOTIC PLATFORM FOR ARTIFICIAL INTELLIGENT DEVELOPMENTS")
 
-    elif sentence == "I'M GO TO PRESS A FRIEND OF MINE":
-	speak_this("O K. Nice")
 
-    elif sentence == "THANK YOU Q B O":
-	speak_this("YOU WELl COME.")
+    
 
-    elif sentence == "GOOD BYE Q B O":
-	speak_this("BYE BYE. NICE TO MEET YOU")
+    if sentence in dialogue:
+        output = dialogue[sentence]
+        print random.choice(output)
+        speak_this(random.choice(output))
+
 
     elif sentence=="WHAT TIME IS IT":
         rospy.wait_for_service("/pluginsystem");
@@ -72,6 +68,32 @@ def main():
     global client_speak
     global face_detected
     face_detected = False
+
+
+    # We load the dialgues from the config folder
+    global dialogue
+    dialogue = {}
+    f = open('../config/dialogues')    
+    for line in f.readlines():
+        try:
+            line = line.replace("\n","")
+            parts = line.split(">>>")
+
+            dialogue_input = parts[0]
+            dialogue_output = parts[1]
+        
+            # we check wheter the input line alreayd exists, if so, we add to its own list
+            if dialogue_input in dialogue:
+                list_of_answers = dialogue[dialogue_input]
+                list_of_answers.append(dialogue_output)
+                dialogue[dialogue_input] = list_of_answers
+            else:
+                #dialogue_input does not exist
+                dialogue[dialogue_input] = [dialogue_output]
+        except:
+            pass        
+
+    f.close()    
 
     rospy.init_node('questions')
     rospy.loginfo("Starting questions node")
