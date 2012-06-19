@@ -17,6 +17,11 @@ rosmake
 
 rosrun qbo_questions questions.py
 
+roslaunch qbo_questions qbo_questions_ES.launch
+
+roslaunch qbo_questions qbo_questions_EN.launch
+
+
 === Arvhive Contents ===
 
 ./manifest.xml	Ros information file
@@ -31,8 +36,15 @@ rosrun qbo_questions questions.py
 === Changelog ===
 
 qbo_questions v1.0
+    * Now dialogues are taken from config folder
+    * Several languages supported
+-- Daniel Cuadrado <daniel.cuadrado@openqbo.org>
+
+
+qbo_questions v1.0
 	* First release
 -- Sergio Merino <s.merino@openqbo.org>  20-02-2012
+
 
 === Homepage ===
 
@@ -41,4 +53,4 @@ http://openqbo.org/wiki/doku.php?id=qbo_apps:ros_pack:qbo_questions
 === Contact ===
 
 Sergio Merino <s.merino@openqbo.org>
-
+Daniel Cuadrado <daniel.cuadrado@openqbo.org>
