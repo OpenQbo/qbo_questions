@@ -17,16 +17,23 @@ from qbo_talk.srv import Text2Speach
 from qbo_system_info.srv import AskInfo
 
 from qbo_face_msgs.msg import FacePosAndDist
+from std_msgs.msg import String
 
 import random
 
 
 global client_speak
 global face_detected
+global dialogue
+global subscribe
 
-global voice_SP 
-global voice_EN
-global lang
+def system_language(data):
+    try:
+        set_language(data.data)
+        rospy.loginfo("Language changed to "+data.data)
+    except KeyError:
+        rospy.loginfo("Error: Language not recognized("+data.data+")")
+
 
 def speak_this(text):
     global client_speak
@@ -42,11 +49,9 @@ def listen_callback(data):
        rospy.loginfo("Ignoring last sentece because face was not detected")
        return
 
-
     if sentence in dialogue:
         output = dialogue[sentence]
         speak_this(random.choice(output))
-
 
     elif sentence=="WHAT TIME IS IT":
         rospy.wait_for_service("/pluginsystem");
@@ -72,26 +77,12 @@ def face_callback(data):
     global face_detected
     face_detected = data.face_detected	
 
-def main():
-    global client_speak
-    global face_detected
-    global voice_EN
-    global voice_SP
-    global lang
 
-    voice_SP = "JuntaDeAndalucia_es_sf_diphone"
-    voice_EN = "cmu_us_awb_arctic_clunits"
-    lang = rospy.get_param("/qbo_questions/language", "en")
-
-
-    face_detected = False
-
-    # We load the dialgues from the config folder
+def read_dialogues(filename):
     global dialogue
     dialogue = {}
 
-    path = roslib.packages.get_pkg_dir("qbo_questions")
-    f = open(path+'/config/dialogues_'+lang)    
+    f = open(filename)    
     for line in f.readlines():
         try:
             line = line.replace("\n","")
@@ -110,59 +101,48 @@ def main():
         except Exception:
             pass        
 
-    f.close()    
+    f.close()
+
+def set_language(lang):
+    if lang!="es" or lang!="en":
+        lang="en"
+    global subscribe
+    try:
+        subscribe.unregister()
+        rospy.loginfo("Unregistered from previous language")
+    except NameError:
+        rospy.loginfo("First language set")
+    path = roslib.packages.get_pkg_dir("qbo_questions")
+    filename = path+'/config/dialogues_'+lang
+    read_dialogues(filename)
+    subscribe=rospy.Subscriber("/listen/"+lang+"_questions", Listened, listen_callback)
+  
+
+def main():
+    global client_speak
+    global face_detected
+
+    rospy.init_node('qbo_questions')
+    lang = rospy.get_param("/system_lang", "en")
+    face_detected = False
+
+    set_language(lang)
 
     print "Dialog => "+str(dialogue)
 
-    rospy.init_node('questions')
     rospy.loginfo("Starting questions node")
-
  
-    changeLang = rospy.ServiceProxy("/qbo_talk/festival_language", Text2Speach)
     client_speak = rospy.ServiceProxy("/qbo_talk/festival_say", Text2Speach)
 
+    #Set Julius
+    rospy.Subscriber("/system_lang", String, system_language)
 
-    #Set Julius & Festival language
-    if lang=="es":
-        #Julius
-        subscribe=rospy.Subscriber("/listen/es_questions", Listened, listen_callback)
-        
-        #Festival
-        changeLang(voice_SP)
-    else:
-        #Julius
-        subscribe=rospy.Subscriber("/listen/en_questions", Listened, listen_callback)
-
-        #Festival
-        changeLang(voice_EN)
-
+    #For face view
     rospy.Subscriber("/qbo_face_tracking/face_pos_and_dist", FacePosAndDist, face_callback)
 
 
-
-    
     rospy.spin()
 
-
-
-
-def roskill_handler():
-    #Reached this point we are about to quit this node, but we need to restart the voice, just in case
-    #it was changed, so:
-    global lang
-    print "::Finishing Qbo_questions::"
-    if lang != "en":
-        rospy.init_node('questions')
-        #We set the deafult voice to english
-        changeLang = rospy.ServiceProxy("/qbo_talk/festival_language", Text2Speach)
-        changeLang(voice_EN)
-
-
-
-
-
-
-rospy.on_shutdown(roskill_handler)
 
 if __name__ == '__main__':
     main()
