@@ -65,13 +65,6 @@ def listen_callback(data):
         info = service_pluginsystem("hdate")
         rospy.loginfo(info.info)
         speak_this(info.info)
-    elif sentence=="DO YOU SPEAK SPANISH":
-        rospy.wait_for_service("/qbo_talk/festival_language");
-        service_change_voice_language = rospy.ServiceProxy('/qbo_talk/festival_language', Text2Speach)
-        service_change_voice_language("JuntaDeAndalucia_es_sf_diphone")
-        speak_this("un poquito. Estoy aprendiendo")
-        service_change_voice_language("cmu_us_awb_arctic_clunits")
-
 
 def face_callback(data):
     global face_detected
@@ -104,16 +97,21 @@ def read_dialogues(filename):
     f.close()
 
 def set_language(lang):
-    if lang!="es" or lang!="en":
+
+    if lang!="es" and lang!="en":
         lang="en"
+
     global subscribe
     try:
         subscribe.unregister()
         rospy.loginfo("Unregistered from previous language")
     except NameError:
         rospy.loginfo("First language set")
+
+
     path = roslib.packages.get_pkg_dir("qbo_questions")
     filename = path+'/config/dialogues_'+lang
+    print "Dialogue filename loaded: "+filename
     read_dialogues(filename)
     subscribe=rospy.Subscriber("/listen/"+lang+"_questions", Listened, listen_callback)
   
@@ -127,6 +125,7 @@ def main():
     face_detected = False
 
     set_language(lang)
+    print "Language loaded: "+lang
 
     print "Dialog => "+str(dialogue)
 
