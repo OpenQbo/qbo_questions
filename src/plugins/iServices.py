@@ -9,13 +9,20 @@
 #You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 import rospy
-
-from qbo_internet_services.srv import InternetServices
+import json
+from qbo_internet_services.srv import InternetService
 
 def location(sentence,language):
     rospy.wait_for_service("/internetservices");
-    service_iservices = rospy.ServiceProxy('/internetservices', InternetServices)
+    service_iservices = rospy.ServiceProxy('/internetservices', InternetService)
     info = service_iservices("location","")
-    rospy.loginfo(info.info)
-    return info.info
+    decodedData=json.loads(info.info)
+    if type(decodedData) is dict:
+        city=decodedData['city']
+        country=decodedData['country']
+    else:
+        print "Not valid JSON recived"
+    response="We are in "+city+", in "+country
+    rospy.loginfo(response)
+    return response
 
