@@ -14,8 +14,6 @@ import rospy
 from qbo_listen.msg import Listened
 from qbo_talk.srv import Text2Speach
 
-from qbo_system_info.srv import AskInfo
-
 from qbo_face_msgs.msg import FacePosAndDist
 from std_msgs.msg import String
 
@@ -33,6 +31,7 @@ global face_detected
 global dialogue
 global subscribe
 global plugins
+global lang
 
 def system_language(data):
     try:
@@ -63,7 +62,7 @@ def listen_callback(data):
         if choice[0]=="$":
             choice=choice.replace("$","")
             choice=choice.lower()
-            text=getattr(plugins,choice)()
+            text=getattr(plugins,choice)(sentence,lang)
         else:
             text=choice
         speak_this(text)
@@ -128,6 +127,7 @@ def loadPlugins():
 def main():
     global client_speak
     global face_detected
+    global lang
 
     #Init ROS
     rospy.init_node('qbo_questions')
