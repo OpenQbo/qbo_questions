@@ -48,6 +48,8 @@ def speak_this(text):
 def listen_callback(data):
     global face_detected  
     global dialogue
+    
+    text=""
     sentence = data.msg
     rospy.loginfo("Listened: |"+sentence+"|")
    
@@ -62,7 +64,11 @@ def listen_callback(data):
         if choice[0]=="$":
             choice=choice.replace("$","")
             choice=choice.lower()
-            text=getattr(plugins,choice)(sentence,lang)
+            for plug in plugins:
+                try:
+                   text=getattr(plug,choice)(sentence,lang)
+                except AttributeError:
+                    rospy.loginfo("Attibute "+choice +" could not be found:"+ str(dir(plug)))
         else:
             text=choice
         speak_this(text)
@@ -117,11 +123,12 @@ def set_language(lang):
 
 def loadPlugins():
     global plugins
+    plugins=[]
     path = roslib.packages.get_pkg_dir("qbo_questions")
     for f in os.listdir(path+"/src/plugins/"):
         moduleName, ext = os.path.splitext(f) 
         if ext == '.py' and moduleName!="__init__":
-            plugins=__import__(moduleName)
+            plugins.append(__import__(moduleName))
 
 
 def main():
