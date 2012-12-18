@@ -67,6 +67,7 @@ def listen_callback(data):
             for plug in plugins:
                 try:
                    text=getattr(plug,choice)(sentence,lang)
+                   break
                 except AttributeError:
                     rospy.loginfo("Attibute "+choice +" could not be found:"+ str(dir(plug)))
         else:
