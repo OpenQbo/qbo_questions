@@ -20,12 +20,18 @@ from qbo_face_msgs.msg import FacePosAndDist
 from std_msgs.msg import String
 
 import random
+import sys
+import os
+#Load plugins directory
+path = roslib.packages.get_pkg_dir("qbo_questions")
+sys.path.append(path+"/src/plugins")
 
 
 global client_speak
 global face_detected
 global dialogue
 global subscribe
+global plugins
 
 def system_language(data):
     try:
@@ -39,6 +45,20 @@ def speak_this(text):
     global client_speak
     client_speak(str(text))
 
+#def hour():
+#    rospy.wait_for_service("/pluginsystem");
+#    service_pluginsystem = rospy.ServiceProxy('/pluginsystem', AskInfo)
+#    info = service_pluginsystem("hour")
+#    rospy.loginfo(info.info)
+#    speak_this(info.info)
+
+#def date():
+#    rospy.wait_for_service("/pluginsystem");
+#    service_pluginsystem = rospy.ServiceProxy('/pluginsystem', AskInfo)
+#    info = service_pluginsystem("hdate")
+#    rospy.loginfo(info.info)
+#    speak_this(info.info)
+
 def listen_callback(data):
     global face_detected  
     global dialogue
@@ -51,20 +71,15 @@ def listen_callback(data):
 
     if sentence in dialogue:
         output = dialogue[sentence]
-        speak_this(random.choice(output))
-
-    elif sentence=="WHAT TIME IS IT":
-        rospy.wait_for_service("/pluginsystem");
-        service_pluginsystem = rospy.ServiceProxy('/pluginsystem', AskInfo)
-        info = service_pluginsystem("hour")
-        rospy.loginfo(info.info)
-        speak_this(info.info)
-    elif sentence=="WHAT DAY IS IT TODAY":
-        rospy.wait_for_service("/pluginsystem");
-        service_pluginsystem = rospy.ServiceProxy('/pluginsystem', AskInfo)
-        info = service_pluginsystem("hdate")
-        rospy.loginfo(info.info)
-        speak_this(info.info)
+        choice=random.choice(output)
+        
+        if choice[0]=="$":
+            choice=choice.replace("$","")
+            choice=choice.lower()
+            text=getattr(plugins,choice)()
+        else:
+            text=choice
+        speak_this(text)
 
 def face_callback(data):
     global face_detected
@@ -82,7 +97,8 @@ def read_dialogues(filename):
             parts = line.split(">>>")
 
             dialogue_input = parts[0].upper()
-            dialogue_output = parts[1].upper()
+            dialogue_output = parts[1].upper().strip()
+            
 
         
             # we check wheter the input line alreayd exists, if so, we add to its own list
@@ -114,15 +130,29 @@ def set_language(lang):
     print "Dialogue filename loaded: "+filename
     read_dialogues(filename)
     subscribe=rospy.Subscriber("/listen/"+lang+"_questions", Listened, listen_callback)
-  
+
+def loadPlugins():
+    global plugins
+    path = roslib.packages.get_pkg_dir("qbo_questions")
+    for f in os.listdir(path+"/src/plugins/"):
+        moduleName, ext = os.path.splitext(f) 
+        if ext == '.py' and moduleName!="__init__":
+            plugins=__import__(moduleName)
+
 
 def main():
     global client_speak
     global face_detected
 
+    #Init ROS
     rospy.init_node('qbo_questions')
     lang = rospy.get_param("/system_lang", "en")
+
+    #Init variable to know if somebody is in front of qbo
     face_detected = False
+
+    #Load plugins
+    loadPlugins()
 
     set_language(lang)
     print "Language loaded: "+lang
