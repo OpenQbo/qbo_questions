@@ -22,6 +22,7 @@ from std_msgs.msg import String
 import random
 import sys
 import os
+
 #Load plugins directory
 path = roslib.packages.get_pkg_dir("qbo_questions")
 sys.path.append(path+"/src/plugins")
@@ -44,20 +45,6 @@ def system_language(data):
 def speak_this(text):
     global client_speak
     client_speak(str(text))
-
-#def hour():
-#    rospy.wait_for_service("/pluginsystem");
-#    service_pluginsystem = rospy.ServiceProxy('/pluginsystem', AskInfo)
-#    info = service_pluginsystem("hour")
-#    rospy.loginfo(info.info)
-#    speak_this(info.info)
-
-#def date():
-#    rospy.wait_for_service("/pluginsystem");
-#    service_pluginsystem = rospy.ServiceProxy('/pluginsystem', AskInfo)
-#    info = service_pluginsystem("hdate")
-#    rospy.loginfo(info.info)
-#    speak_this(info.info)
 
 def listen_callback(data):
     global face_detected  
@@ -98,8 +85,6 @@ def read_dialogues(filename):
 
             dialogue_input = parts[0].upper()
             dialogue_output = parts[1].upper().strip()
-            
-
         
             # we check wheter the input line alreayd exists, if so, we add to its own list
             if dialogue_input in dialogue:                
