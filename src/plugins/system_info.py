@@ -8,19 +8,19 @@
 #
 #You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-import roslib; roslib.load_manifest('qbo_questions')
+#import roslib; roslib.load_manifest('qbo_questions')
 import rospy
 
 from qbo_system_info.srv import AskInfo
 
-def hour():
+def hour(sentence,language):
     rospy.wait_for_service("/pluginsystem");
     service_pluginsystem = rospy.ServiceProxy('/pluginsystem', AskInfo)
     info = service_pluginsystem("hour")
     rospy.loginfo(info.info)
     return info.info
 
-def date():
+def date(sentence,language):
     rospy.wait_for_service("/pluginsystem");
     service_pluginsystem = rospy.ServiceProxy('/pluginsystem', AskInfo)
     info = service_pluginsystem("hdate")
