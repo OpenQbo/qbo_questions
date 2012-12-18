@@ -10,18 +10,12 @@
 
 import rospy
 
-from qbo_system_info.srv import AskInfo
+from qbo_internet_services.srv import InternetServices
 
-def hour(sentence,language):
-    rospy.wait_for_service("/pluginsystem");
-    service_pluginsystem = rospy.ServiceProxy('/pluginsystem', AskInfo)
-    info = service_pluginsystem("hour")
+def location(sentence,language):
+    rospy.wait_for_service("/internetservices");
+    service_iservices = rospy.ServiceProxy('/internetservices', InternetServices)
+    info = service_iservices("location","")
     rospy.loginfo(info.info)
     return info.info
 
-def date(sentence,language):
-    rospy.wait_for_service("/pluginsystem");
-    service_pluginsystem = rospy.ServiceProxy('/pluginsystem', AskInfo)
-    info = service_pluginsystem("hdate")
-    rospy.loginfo(info.info)
-    return info.info
