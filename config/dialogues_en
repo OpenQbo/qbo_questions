@@ -6,3 +6,7 @@ GOOD BYE QBO>>> BYE BYE. NICE TO MEET YOU
 WHAT TIME IS IT>>> $hour
 WHAT DAY IS IT TODAY>>> $date
 WHERE ARE WE>>> $location
+DO YOU KNOW WHERE ARE>>> $location
+HOW'S THE WEATHER>>> $weather
+HOW IS THE WEATHER>>> $weather
+
