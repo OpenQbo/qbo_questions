@@ -30,5 +30,6 @@
 <!-- QBO CHATTER -->
     <node name="qbo_questions" pkg="qbo_questions" type="questions.py" output="screen" />
     <node name="qbo_system_info" pkg="qbo_system_info" type="plugin_system.py" />
+    <node name="qbo_internet_services" pkg="qbo_internet_services" type="internet_services.py" />
 </launch>
 
