@@ -26,3 +26,27 @@ def location(sentence,language):
     rospy.loginfo(response)
     return response
 
+def weather(sentence,language):
+    rospy.wait_for_service("/internetservices");
+    service_iservices = rospy.ServiceProxy('/internetservices', InternetService)
+    info = service_iservices("weather","")
+    decodedData=json.loads(info.info)
+    if type(decodedData) is dict:
+        temp=decodedData['temp']
+
+# Convert to celsius(comment farenheit conversion if you uncomment this line):
+        temp=temp-272.15
+
+# Convert to Farenheit (comment celsius conversion if you uncomment this line)
+#        temp=((temp*9)/5)-459.67
+        if temp-int(temp)>=0.5:
+            temp=int(temp)+1
+        else:
+            temp=int(temp)
+        desc=decodedData['description']
+    else:
+        print "Not valid JSON recived"
+    response="Today is "+desc+" and the temperature is of "+str(temp) +" degrees"
+    rospy.loginfo(response)
+    return response
+
