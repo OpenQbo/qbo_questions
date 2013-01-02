@@ -1,6 +1,6 @@
 Package: qboros-electric-qbo-questions
 Source: qboros-electric-qbo-questions
-Version: 1.1-openqbo0
+Version: 1.2-openqbo0
 Section: OpenQbo
 Depends: ros-electric-ros, python, qboros-electric-qbo-listen, qboros-electric-qbo-talk, qboros-electric-qbo-system-info, qboros-electric-qbo-face-vision
 Priority: standard

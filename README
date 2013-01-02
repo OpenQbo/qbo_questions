@@ -1,4 +1,4 @@
-qbo_questions v1.1
+qbo_questions v1.2
 02-01-2013
 
 === Copyright ===
@@ -35,10 +35,10 @@ roslaunch qbo_questions qbo_questions_EN.launch
 
 === Changelog ===
 
-qbo_questions v1.1
+qbo_questions v1.2
     * Added plugins support
 
-qbo_questions v1.0
+qbo_questions v1.1
     * Now dialogues are taken from config folder
     * Several languages supported
 -- Daniel Cuadrado <daniel.cuadrado@openqbo.org>
