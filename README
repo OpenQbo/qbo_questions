@@ -1,9 +1,9 @@
-qbo_questions v1.0
-20-02-2012
+qbo_questions v1.1
+02-01-2013
 
 === Copyright ===
 
-Copyright (C) 2012 Thecorpora Inc.
+Copyright (C) 2012-2013 Thecorpora Inc.
 
 === Description  ===
 
@@ -34,6 +34,9 @@ roslaunch qbo_questions qbo_questions_EN.launch
 ./README	This file
 
 === Changelog ===
+
+qbo_questions v1.1
+    * Added plugins support
 
 qbo_questions v1.0
     * Now dialogues are taken from config folder
